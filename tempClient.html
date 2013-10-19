@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Chat</title>
+    <script type="text/javascript" src="libs/websocket.js"></script>
+  </head>
+  <body>
+    <div id="console" style="border:1px black solid;"></div>
+	<form>
+		<label for="message">message : </label>
+		<input type='text' id='message' name='message' />
+		<input type='button' value='envoyer message'  onclick='sendMessage(websocket)' />
+		<input type='button' value='fermer la connexion'  onclick='closeConnexion(websocket)' />
+	</form>
+  </body>
+</html>
