@@ -1,0 +1,45 @@
+/* Current rules are for testing purpose. 
+ * You can play with the map width and height to view the different dragging behaviors. 
+ * Each block (if present) represent a strict copy of the map (.X1.Y1 in red color) */
+.map
+{
+	width:1800px;
+	height:1200px;
+	position:absolute;
+}
+.X1.Y1
+{
+	background-color:red;
+}
+.X0.Y1
+{
+	background-color:blue;
+}
+.X2.Y1
+{
+	background-color:green;
+}
+.X1.Y0
+{
+	background-color:yellow;
+}
+.X0.Y0
+{
+	background-color:cyan;
+}
+.X2.Y0
+{
+	background-color:magenta;
+}
+.X1.Y2
+{
+	background-color:white;
+}
+.X0.Y2
+{
+	background-color:lightgray;
+}
+.X2.Y2
+{
+	background-color:gray;
+}
