@@ -1,5 +1,5 @@
 <?php
-	include("clientManager.class.php");
+	//include("clientManager.class.php");
 
 	class Server
 	{

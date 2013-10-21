@@ -1,5 +1,5 @@
 <?php
-	include("client.class.php");
+	//include("client.class.php");
 	
 	class ClientManager
 	{
@@ -13,7 +13,7 @@
 		
 		public function addClient($ip,$port,&$socket)
 		{
-			$this->clientList[$socket] = new Client($ip,$port,$socket);
+			$this->clientList[intval($socket)] = new Client($ip,$port,$socket);
 			$this->showNumderOfClient();
 		}
 		
@@ -24,18 +24,18 @@
 		
 		public function deleteClient($socket)
 		{
-			$this->log('Deleting client '.$this->clientList[$socket]->ip.':'.$this->clientList[$socket]->port);
-			$this->clientList[$socket]->delete();
-			unset($this->clientList[$socket]);		
+			$this->log('Deleting client '.$this->clientList[intval($socket)]->ip.':'.$this->clientList[intval($socket)]->port);
+			$this->clientList[intval($socket)]->delete();
+			unset($this->clientList[intval($socket)]);		
 			$this->log('Client deleted.');	
 			$this->showNumderOfClient();
 		}
 		
 		public function getClient($socket)
 		{
-			if(isset($this->clientList[$socket]))
+			if(isset($this->clientList[intval($socket)]))
 			{				
-				return $this->clientList[$socket];
+				return $this->clientList[intval($socket)];
 			}
 			else
 			{
@@ -46,7 +46,7 @@
 		
 		public function doHandshake($socket,$data)
 		{
-			$this->log('Performing handshake with '.$this->clientList[$socket]->ip.':'.$this->clientList[$socket]->port);
+			$this->log('Performing handshake with '.$this->clientList[intval($socket)]->ip.':'.$this->clientList[intval($socket)]->port);
 			
 			$lines = preg_split("/\r\n/", $data);
 			
@@ -88,8 +88,8 @@
 		
 			//on envoie la réponse
 			socket_write($socket, $response, strlen($response));		
-			$this->clientList[$socket]->handshakedDone();
-			$this->log('Handshake sent to '.$this->clientList[$socket]->ip.':'.$this->clientList[$socket]->port);
+			$this->clientList[intval($socket)]->handshakedDone();
+			$this->log('Handshake sent to '.$this->clientList[intval($socket)]->ip.':'.$this->clientList[intval($socket)]->port);
 			
 			return true;			
 		}
