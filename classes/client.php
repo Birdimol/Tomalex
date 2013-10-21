@@ -7,7 +7,7 @@
 		private $socket;
 		private $handshaked;
 		
-		function __construct($ip,$port,&$socket)
+		public function __construct($ip,$port,&$socket)
 		{
 			$this->ip = $ip;
 			$this->port = $port;
@@ -18,17 +18,17 @@
 			$this->log("Client created $this->ip:$this->port");
 		}
 		
-		function delete()
+		public function delete()
 		{
 			socket_close($this->socket);
 		}
 		
-		function handshakedDone()
+		public function handshakedDone()
 		{
 			$this->handshaked = true;
 		}
 		
-		function __get($name)
+		public function __get($name)
 		{
 			return $this->$name;
 		}

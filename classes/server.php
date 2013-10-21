@@ -302,38 +302,81 @@
 			
 		private function handleData($data, $client)
 		{
+			//on converti pour pouvoir lire en PHP
 			$decodedData = $this->hybi10Decode($data);
 		
+			//De quel message venu du navigateur s'agit-il ?
 			switch($decodedData['type'])
 			{
-				case 'text':					
-					$this->log ("-------------------------------------");
-					$dataLines = explode("\n",$decodedData["payload"]);
-					foreach($dataLines as $dataLine)
+				//Du texte (tous les dialogues se font via le type text)
+				case 'text':
+					//On converti l'objet reçu.
+					$message = new Message();
+					$message->LoadFromJSON($decodedData["payload"]);
+					
+					//On check le type de l'objet reçu 
+					switch($message->type)
 					{
-						$this->log($dataLine);
-					}
-					$this->log("-------------------------------------");
-					$this->sendMsgToAllClients($decodedData["payload"]);					
-					if(strpos($decodedData["payload"],"hello")!==false)
-					{
-						$msg = "Hi browser !";
-						$this->sendMsgToAllClients($msg);
-					}					
+						//un message pour le chat
+						case "text" :							
+							//On affiche le message reçu sur la console du serveur
+							$this->log ("-------------------------------------");
+							$dataLines = explode("\n",$message->data[0]);
+							foreach($dataLines as $dataLine)
+							{
+								$this->log($dataLine);
+							}
+							$this->log("-------------------------------------");
+							
+							//On envoie le message reçu à tout le monde
+							$this->sendMsgToAllClients($message);
+							
+							//Si on reçoit "hello" dans le message on répond poliment juste à celui qui a envoyé ce message.
+							if(strpos($decodedData["payload"],"hello")!==false)
+							{
+								$msg = new Message("text","Hi browser !");									
+								$this->sendMsgToOneClient($client, $msg);
+							}
+						break;
+												//un mouvement du joueur
+						case "move" :
+							//On affiche le mouvement reçu sur la console du serveur
+							$this->log ("-------------------------------------");
+							$this->log("Client ".$client->ip.":".$client->port." moves in ".$message->data[0].",".$message->data[1]);
+							$this->log("-------------------------------------");	
+
+							//On signale le mouvement à tout le monde
+							$msg = new Message("text","Client ".$client->ip.":".$client->port." moves in ".$message->data[0].",".$message->data[1]);
+							$this->sendMsgToAllClients($msg);								
+							break;
+					}										
 				break;	
 			}
 		}
 		
 		private function sendMsgToAllClients($msg)
 		{
-			$msg = $this->hybi10Encode($msg);
+			//On converti l'objet Message reçu en chaine JSON, et on l'encode pour qu'il puisse être compris par le Javascript
+			$msg = $this->hybi10Encode($msg->toJSON());
+			
+			//pour chaque client actif
 			foreach($this->activeSockets as $socket)
 			{
 				if($socket != $this->masterSocket)
 				{
+					//on envoie la chaine JSON
 					socket_write($socket, $msg, strlen($msg));
 				}
 			}
+		}
+		
+		private function sendMsgToOneClient($client, $msg)
+		{
+			//On converti l'objet Message reçu en chaine JSON, et on l'encode pour qu'il puisse être compris par le Javascript
+			$msg = $this->hybi10Encode($msg->toJSON());
+			
+			//on envoie la chaine JSON au client 
+			socket_write($client->socket, $msg, strlen($msg));
 		}
 			
 		private function log($msg)

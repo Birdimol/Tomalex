@@ -7,12 +7,19 @@ function onOpen(evt)
 function onClose(evt) 
 { 
 	//alert("CLOSE");
-	document.getElementById("console").innerHTML += "D�connection";
+	document.getElementById("console").innerHTML += "D�connection";
 } 
 
 function onMessage(evt) 
 {
-	document.getElementById("console").innerHTML += "< "+evt.data+"<br />";
+	//On crée un objet a partir de la chaine JSON reçue
+	var Message = JSON.parse(evt.data);
+	
+	//Si il s'agit d'un message pour le chat, on l'affiche.
+	if(Message.type == "text")
+	{
+		document.getElementById("console").innerHTML += "< "+Message.data+"<br />";		
+	}
 } 
 
 function onError(evt)
@@ -25,17 +32,43 @@ function closeConnexion(websocket)
 	websocket.close();
 }
 
-function sendMessage(websocket)
+function sendPacket(packet)
 {
-	websocket.send(document.getElementById("message").value);
+	//On crée la chaine JSON
+	var jsonPacket = JSON.stringify(packet);
+	
+	//On l'envoie au serveur
+	websocket.send(jsonPacket);
+}
+
+function sendMessage(websocket)
+{	
+	//on place les données a envoyer dans un tableau
+	var dataArray = new Array(document.getElementById("message").value)
+	
+	//On crée l'objet Message en spécifiant qu'il s'agit d'un texte pour le chat
+	var packet = new Message("text",dataArray);
+	
+	//On envoie
+	sendPacket(packet);
+	
+	//On affiche dans la page web.
 	document.getElementById("console").innerHTML += "> "+document.getElementById("message").value+"<br />";
 	document.getElementById("message").value = '';
 }
 
-if("WebSocket" in window) 
-{ 
-	alert("Votre navigateur supporte les WebSockets"); 
+function sendPosition(x,y)
+{	
+	//on place les données a envoyer dans un tableau
+	var dataArray = new Array(x,y);
 	
+	//On crée l'objet Message en spécifiant qu'il s'agit d'un déplacement du joueur
+	var packet = new Message("move",dataArray);
+	sendPacket(packet);
+}
+
+if("WebSocket" in window) 
+{ 	
 	var wsUri = "ws://localhost:8000"; 
 
 	websocket = new WebSocket(wsUri); 
