@@ -3,6 +3,7 @@ class Message
 {
 	private $type;
 	private $data;
+	private $author;
 	
 	public function __construct($type = null, $data = null)
 	{
@@ -26,6 +27,11 @@ class Message
 		$this->type = $object->type;
 		$this->data = $object->data;
 	}	
+	
+	public function setAuthor($name)
+	{
+		$this->author = $name;
+	}
 	
 	public function __get($varName)
 	{

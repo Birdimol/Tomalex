@@ -6,6 +6,7 @@
 		private $id;
 		private $socket;
 		private $handshaked;
+		private $player;
 		
 		public function __construct($ip,$port,&$socket)
 		{
@@ -16,12 +17,19 @@
 			$this->id = uniqid();
 			
 			$this->log("Client created $this->ip:$this->port");
+			
+			$this->player = null;
 		}
 		
 		public function delete()
 		{
 			socket_close($this->socket);
 		}
+		
+		public function initPlayer($name)
+		{
+			$this->player = new Player($name);				
+		}		
 		
 		public function handshakedDone()
 		{

@@ -44,6 +44,34 @@
 			}			
 		}
 		
+		public function getPlayerList()
+		{
+			$playerList = array();
+			foreach($this->clientList as $client)
+			{
+				if($client->player !== null)
+				{
+					$playerList[] = $client->player->toObject();
+				}
+			}
+			/*
+			$JSONString = "[";
+			foreach($playerList as $player)
+			{
+				if($JSONString == "[")
+				{
+					$JSONString .= $player;
+				}
+				else
+				{
+					$JSONString .= ",".$player;
+				}
+			}
+			$JSONString .= "]";
+			*/
+			return json_encode($playerList);
+		}
+		
 		public function doHandshake($socket,$data)
 		{
 			$this->log('Performing handshake with '.$this->clientList[intval($socket)]->ip.':'.$this->clientList[intval($socket)]->port);
