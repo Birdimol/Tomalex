@@ -1,6 +1,7 @@
 var websocket;
 var player;
 var players;
+var playerManager = new PlayerManager()
 
 function onOpen(evt) 
 { 
@@ -38,13 +39,17 @@ function onMessage(evt)
 	if(Message.type == "playerList")
 	{		
 		var array_ = JSON.parse(Message.data);
-		document.getElementById("playerList").innerHTML ="";	
+		playerManager.manageList(array_);
+		
+		
+		/*
+		 * document.getElementById("playerList").innerHTML ="";	
 		for(var a=0; a<array_.length; a++)
 		{
 			temp = new Player();
 			temp.initFromObject(array_[a]);
 			document.getElementById("playerList").innerHTML += temp.getStringLine();
-		}
+		}*/
 	}
 } 
 
@@ -95,7 +100,7 @@ function sendPosition(x,y)
 function sendPlayer(player)
 {	
 	//on place les données a envoyer dans un tableau
-	var dataArray = new Array(player.pseudo);
+	var dataArray = new Array(player.pseudo,player.color);
 	
 	//On crée l'objet Message en spécifiant qu'il s'agit d'un déplacement du joueur
 	var packet = new Message("initPlayer",dataArray);
@@ -115,6 +120,7 @@ function connect()
 		websocket.onmessage = function(evt) { onMessage(evt) }; 
 		websocket.onerror = function(evt) { onError(evt) }; 
 		player.pseudo = document.getElementById("pseudo").value;
+		player.color = document.getElementById("color").value;
 		document.getElementById("console").innerHTML = "Tentative de connexion de "+player.pseudo+"...<br />";
 	} 
 	else 

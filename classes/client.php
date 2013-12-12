@@ -26,9 +26,9 @@
 			socket_close($this->socket);
 		}
 		
-		public function initPlayer($name)
+		public function initPlayer($name, $xCoord = 5, $yCoord = 5, $color)
 		{
-			$this->player = new Player($name);				
+			$this->player = new Player($name, $xCoord, $yCoord, $color);				
 		}		
 		
 		public function handshakedDone()

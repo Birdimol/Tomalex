@@ -4,12 +4,14 @@
 		private $pseudo;
 		private $xCoord;	
 		private $yCoord;
+		private $color;
 		
-		public function __construct($pseudo, $xCoord = 5, $yCoord = 5)
+		public function __construct($pseudo, $xCoord = 5, $yCoord = 5, $color)
 		{
 			$this->pseudo = $pseudo;
 			$this->xCoord = $xCoord;
 			$this->yCoord = $yCoord;
+			$this->color  = $color;
 		}
 		
 		public function move($xCoord, $yCoord)

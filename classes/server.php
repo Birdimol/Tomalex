@@ -189,7 +189,7 @@
 						
 						//Un client initialise son joueur
 						case "initPlayer" :
-							$client->initPlayer($message->data[0]);
+							$client->initPlayer($message->data[0],5,5,$message->data[1]);
 							//On signale le nouveau joueur à tout le monde.
 							$this->SendPlayerList();
 							$msg = new Message("text",$message->data[0]." a rejoint la partie.");
